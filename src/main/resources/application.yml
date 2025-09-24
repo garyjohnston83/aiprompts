@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+codegen:
+  # Where generated files will be written (Windows path by default)
+  outputDir: "C:\\generated"
+
+  # Default system message prepended to all prompts
+  systemPrompt: "You are a helpful coding assistant."
+
+  # Default parsing rules
+  parsing:
+    defaultMode: "auto"         # options: code | text | auto
+    codeFenceRequired: true
+
+  # Which provider to use if not specified per request
+  providerDefault: "openai"     # options: openai | azure
+
+  openai:
+    apiBaseUrl: "https://api.openai.com/v1"
+    apiKeyEnv: "OPENAI_API_KEY" # must be set in your environment
+    model: "gpt-4.1-mini"
+    timeoutSeconds: 60
+
+  azure:
+    endpoint: "https://YOUR-RESOURCE.openai.azure.com"
+    apiVersion: "2024-02-15-preview"
+    apiKeyEnv: "AZURE_OPENAI_KEY" # must be set in your environment
+    deployment: "gpt4o-mini"      # Azure deployment name
+    timeoutSeconds: 60
