@@ -2,14 +2,20 @@ package com.gjjfintech.aiprompts.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.gjjfintech.aiprompts.config.CodegenProperties;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -49,8 +55,16 @@ public class AzureOpenAIClient implements LLMClient {
             throw new IllegalStateException("AZURE API key env var (" + props.getAzure().getApiKeyEnv() + ") is not set");
         }
 
+        HttpClient insecureHttpClient = HttpClient.create().secure(ssl -> {
+            ssl.sslContext(
+                    SslContextBuilder.forClient()
+                            .trustManager(InsecureTrustManagerFactory.INSTANCE) // trust all
+            );
+        });
+
         WebClient client = webClientBuilder
                 .baseUrl(endpoint)
+                .clientConnector(new ReactorClientHttpConnector(insecureHttpClient))
                 .defaultHeader("api-key", apiKey)
                 .build();
 
@@ -113,5 +127,11 @@ public class AzureOpenAIClient implements LLMClient {
         if (content == null) content = "";
 
         return new ProviderResult(modelUsed, content);
+    }
+
+    private static String basicAuthValue(String user, String pass) {
+        String token = user + ":" + pass;
+        String base64 = Base64.getEncoder().encodeToString(token.getBytes(StandardCharsets.UTF_8));
+        return "Basic " + base64;
     }
 }
