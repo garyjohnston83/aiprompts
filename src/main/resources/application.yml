@@ -3,7 +3,8 @@ server:
 
 codegen:
   # Where generated files will be written (Windows path by default)
-  outputDir: "C:\\generated"
+  outputDir: "C:\\data\\aiprompts\\tempOutputDir"
+  filesBaseDir: "C:\\data\\aiprompts"
 
   # Default system message prepended to all prompts
   systemPrompt: "You are a helpful coding assistant."

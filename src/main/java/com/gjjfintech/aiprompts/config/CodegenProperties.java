@@ -4,14 +4,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import lombok.Data;
 
-import java.util.Map;
-
 @Configuration
 @ConfigurationProperties(prefix = "codegen")
 @Data
 public class CodegenProperties {
 
     private String outputDir;
+    private String filesBaseDir;
     private String systemPrompt;
     private Parsing parsing = new Parsing();
     private String providerDefault;

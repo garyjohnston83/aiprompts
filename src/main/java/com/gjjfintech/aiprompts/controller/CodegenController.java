@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * (with an optional image reference) and save it to a configured directory.
  */
 @RestController
+@CrossOrigin(origins = {"http://localhost:5190"})
 @RequestMapping
 public class CodegenController {
 
